@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Notification Test</title>
+</head>
+<body>
+<h2>WebSocket Notification Client</h2>
+
+<label>User ID to Subscribe:</label>
+<input type="text" id="userId" value="1" />
+<button onclick="connect()">Connect & Subscribe</button>
+
+<h3>Messages:</h3>
+<pre id="messages" style="background:#f0f0f0; padding:10px; height:200px; overflow:auto;"></pre>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+    let stompClient = null;
+
+    function connect() {
+      const userId = document.getElementById("userId").value;
+      const socket = new SockJS("http://localhost:8080/ws");
+      stompClient = Stomp.over(socket);
+
+      stompClient.connect({}, function (frame) {
+        log("Connected: " + frame);
+        stompClient.subscribe("/topic/notify/" + userId, function (notification) {
+          log("Notification: " + notification.body);
+        });
+      });
+    }
+
+    function log(message) {
+      const messages = document.getElementById("messages");
+      messages.textContent += message + "\n";
+    }
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.socialMedia.socialMediaApp.controllers;
 
+import com.socialMedia.socialMediaApp.dto.FollowResponse;
 import com.socialMedia.socialMediaApp.entities.User;
 import com.socialMedia.socialMediaApp.services.userServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ public class UserController {
         return userService.getUserByUsername(username)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/folllow/{followerUserId}/{userId}")
+    public FollowResponse addFollower(@PathVariable Long followerUserId,
+                                      @PathVariable Long userId){
+        return  userService.addFollower(followerUserId,userId);
     }
 }
 

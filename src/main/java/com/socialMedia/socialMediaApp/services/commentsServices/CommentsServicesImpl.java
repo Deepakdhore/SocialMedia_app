@@ -2,6 +2,7 @@ package com.socialMedia.socialMediaApp.services.commentsServices;
 
 import com.socialMedia.socialMediaApp.entities.Comments;
 import com.socialMedia.socialMediaApp.repositories.CommentRepository;
+import com.socialMedia.socialMediaApp.services.notificationServices.CommentNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,11 @@ public class CommentsServicesImpl implements CommentsServices{
         this.repository = repository;
     }
 
+    @Autowired
+    private CommentNotificationService commentNotificationService;
     @Override
     public Comments addComment(Comments comment) {
+        commentNotificationService.sendNotification(comment.getUser().getId(), comment.getPost().getUser().getId(),comment.getPost().getId());
         return repository.save(comment);
     }
 
@@ -37,7 +41,5 @@ public class CommentsServicesImpl implements CommentsServices{
     }
 
     @Override
-    public List<Comments> getByUserIdPostId(Long userId, Long postId) {
-        return repository.findByUser_IdAndPost_IdOrderByCommentedAt(userId,postId);
-    }
+    public List<Comments> getByUserIdPostId(Long userId, Long postId) { return repository.findByUser_IdAndPost_IdOrderByCommentedAt(userId,postId); }
 }

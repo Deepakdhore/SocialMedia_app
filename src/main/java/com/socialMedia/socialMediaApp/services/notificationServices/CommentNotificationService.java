@@ -1,24 +1,24 @@
 package com.socialMedia.socialMediaApp.services.notificationServices;
 
 import com.socialMedia.socialMediaApp.dto.NotificationMessage;
-import com.socialMedia.socialMediaApp.entities.User;
 import com.socialMedia.socialMediaApp.repositories.UserRepository;
-import com.socialMedia.socialMediaApp.services.userServices.UserService;
+import com.socialMedia.socialMediaApp.services.postServices.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
-public class NotificationService {
-
+public class CommentNotificationService {
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    SimpMessagingTemplate messagingTemplate;
     @Autowired
-    private UserRepository userRepository;
-
-    public void sendNotification(Long senderId,Long receiverId, String message) {
+    UserRepository userRepository;
+    @Autowired
+    PostServiceImpl postService;
+    public void sendNotification(Long senderId,Long receiverId,Long postId) {
         NotificationMessage notification = new NotificationMessage();
 
         String senderName = userRepository.findById(senderId)
@@ -28,11 +28,11 @@ public class NotificationService {
         String receiverName = userRepository.findById(receiverId)
                 .orElseThrow(() -> new RuntimeException("Receiver not found"))
                 .getUsername();
-
+        String postName= (postService.getPostById(postId).orElse(null)).getContent();
         notification.setReceiverName(receiverName);
         notification.setSenderName(senderName);
-        notification.setMessage(message);
-        notification.setType("LIKE");
+        notification.setMessage("new Comment on post[ "+postName+" ]");
+        notification.setType("Comment");
         notification.setTimestamp(LocalDateTime.now());
 
         messagingTemplate.convertAndSend("/topic/notify/" + receiverId, notification);

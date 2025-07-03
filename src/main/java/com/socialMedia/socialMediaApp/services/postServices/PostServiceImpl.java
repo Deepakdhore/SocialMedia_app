@@ -3,6 +3,8 @@ package com.socialMedia.socialMediaApp.services.postServices;
 import com.socialMedia.socialMediaApp.entities.Post;
 import com.socialMedia.socialMediaApp.repositories.PostRepository;
 import com.socialMedia.socialMediaApp.repositories.UserRepository;
+import com.socialMedia.socialMediaApp.services.notificationServices.CommentNotificationService;
+import com.socialMedia.socialMediaApp.services.notificationServices.PostNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,12 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostNotification postNotification;
     @Override
     public Post createPost(Post post) {
         post.setCreatedAt(LocalDateTime.now());
+        postNotification.sendNotification(post.getUser().getId());
         return postRepository.save(post);
     }
 

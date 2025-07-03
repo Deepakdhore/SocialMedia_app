@@ -36,4 +36,20 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
+
+    // ✅ Users this user is following
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "follower_id"), // current user
+            inverseJoinColumns = @JoinColumn(name = "following_id") // user they follow
+    )
+    @JsonIgnore // Prevent infinite loop in JSON response
+    private List<User> following;
+
+    // ✅ Users following this user
+    @ManyToMany(mappedBy = "following")
+    @JsonIgnore
+    private List<User> followers;
+
 }

@@ -4,7 +4,7 @@ import com.socialMedia.socialMediaApp.entities.Like;
 import com.socialMedia.socialMediaApp.repositories.LikeRepository;
 import com.socialMedia.socialMediaApp.services.postServices.PostService;
 import com.socialMedia.socialMediaApp.repositories.UserRepository;
-import com.socialMedia.socialMediaApp.services.notificationServices.NotificationService;
+import com.socialMedia.socialMediaApp.services.notificationServices.LikeNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class LikeServiceImpl implements LikeService{
 
     @Autowired
-    NotificationService notificationService;
+    LikeNotificationService notificationService;
     @Autowired
     LikeRepository likeRepository;
     @Autowired

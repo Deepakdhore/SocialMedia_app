@@ -39,6 +39,20 @@ public class UserServiceImpl implements UserService {
         return fResponse;
     }
 
+    @Override
+    public User updateUserBio(String username, String newBio) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        user.setBio("");
+        user.setBio(newBio);
+        System.out.println("new BIO is:"+ newBio+"\n"+user);
+        return user;
+    }
+
+    @Override
+    public User updateUser(User user) {
+       return userRepository.save(user);
+    }
+
     //    @Override
 //    public User getUserById(Long userId){
 //        return null

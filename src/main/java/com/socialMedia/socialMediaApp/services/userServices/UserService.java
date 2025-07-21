@@ -10,5 +10,9 @@ public interface UserService {
     Optional<User> getUserByUsername(String username);
 
     FollowResponse addFollower(Long followerId,Long id);
+
+    User updateUserBio(String username, String newBio);
+
+    User updateUser(User user);
     //User getUserById(Long userId);
 }

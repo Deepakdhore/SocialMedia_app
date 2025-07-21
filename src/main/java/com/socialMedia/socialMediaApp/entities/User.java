@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -29,6 +31,11 @@ public class User {
     private String fullName;
     private String bio;
     private String profileImageUrl;
+
+    @ElementCollection
+    @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "interest")
+    private Set<String> interests = new HashSet<>();
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

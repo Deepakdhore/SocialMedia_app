@@ -41,6 +41,7 @@ public class CommentsController {
     public CommentResponse postComment(@PathVariable Long userId,
                                 @PathVariable Long postId,
                                 @RequestBody CommentRequest commentRequest){
+
         Comments comments=new Comments();
         comments.setComment(commentRequest.getComment());
         comments.setCommentedAt(LocalDateTime.now());

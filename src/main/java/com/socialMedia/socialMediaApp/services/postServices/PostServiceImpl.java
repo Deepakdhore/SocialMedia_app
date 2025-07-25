@@ -1,5 +1,6 @@
 package com.socialMedia.socialMediaApp.services.postServices;
 
+import com.socialMedia.socialMediaApp.dto.PostDto;
 import com.socialMedia.socialMediaApp.entities.Post;
 import com.socialMedia.socialMediaApp.repositories.PostRepository;
 import com.socialMedia.socialMediaApp.repositories.UserRepository;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -24,15 +27,30 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostNotification postNotification;
     @Override
-    public Post createPost(Post post) {
-        post.setCreatedAt(LocalDateTime.now());
-        postNotification.sendNotification(post.getUser().getId());
-        return postRepository.save(post);
+    public Post createPost(Map<String,String> post) {
+
+        Post newPost= new Post();
+        newPost.setContent(post.get("description"));
+        newPost.setImageUrl(post.get("uploadedUrl"));
+        newPost.setUser(userRepository.findByUsername(post.get("username")).orElse(null));
+        newPost.setCreatedAt(LocalDateTime.now());
+        System.out.println("this is the new post data"+newPost);
+
+        postNotification.sendNotification(newPost.getUser().getId());
+
+        return postRepository.save(newPost);
     }
 
     @Override
-    public List<Post> getPostsByUsername(String username) {
-        return postRepository.findByUserUsernameOrderByCreatedAtDesc(username);
+    public List<PostDto> getPostsByUsername(String username) {
+
+        List<Post> posts = postRepository.findByUserUsernameOrderByCreatedAtDesc(username);
+        return posts.stream().map(post -> {
+            PostDto dto = new PostDto();
+            dto.setContent(post.getContent());
+            dto.setImageUrl(post.getImageUrl());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Override

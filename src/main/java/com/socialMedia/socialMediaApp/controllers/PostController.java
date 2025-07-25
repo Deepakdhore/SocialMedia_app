@@ -1,5 +1,6 @@
 package com.socialMedia.socialMediaApp.controllers;
 
+import com.socialMedia.socialMediaApp.dto.PostDto;
 import com.socialMedia.socialMediaApp.entities.Post;
 import com.socialMedia.socialMediaApp.entities.User;
 import com.socialMedia.socialMediaApp.repositories.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,18 +25,29 @@ public class PostController {
     private UserRepository userRepository;
 
     @PostMapping("/{username}")
-    public ResponseEntity<Post> createPost(@PathVariable String username, @RequestBody Post post) {
-        Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        post.setUser(userOpt.get());
-        Post saved = postService.createPost(post);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    public ResponseEntity<PostDto> createPost(@PathVariable String username, @RequestBody Map<String,String> post) {
+
+        System.out.println(post);
+
+        Post newPost= postService.createPost(post);
+
+        PostDto newPostDto=new PostDto();
+        newPostDto.setContent(newPost.getContent());
+        newPostDto.setUser(newPost.getUser());
+        newPostDto.setImageUrl(newPost.getImageUrl());
+        System.out.println(newPostDto+"\n"+newPostDto);
+        return new ResponseEntity<>(newPostDto, HttpStatus.CREATED);
+//        Optional<User> userOpt = userRepository.findByUsername(username);
+//        if (userOpt.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        post.setUser(userOpt.get());
+//        Post saved = postService.createPost(post);
+
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<Post>> getUserPosts(@PathVariable String username) {
+    public ResponseEntity<List<PostDto  >> getUserPosts(@PathVariable String username) {
         return new ResponseEntity<>(postService.getPostsByUsername(username), HttpStatus.OK);
     }
 

@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService {
         User userWantToFollow= userRepository.findById(followerId).orElse(null);
         User userToBeFollowed=userRepository.findById(id).orElse(null);
 
+        if(userToBeFollowed.getFollowers().contains(userWantToFollow))
+            return null;
         userWantToFollow.getFollowing().add(userToBeFollowed);
         userToBeFollowed.getFollowers().add(userWantToFollow);
         fResponse.setFollowerName(userWantToFollow.getUsername());
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userWantToFollow);
         userRepository.save(userToBeFollowed);
         return fResponse;
+
     }
 
     @Override
@@ -45,6 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setBio("");
         user.setBio(newBio);
         System.out.println("new BIO is:"+ newBio+"\n"+user);
+        userRepository.save(user);
         return user;
     }
 

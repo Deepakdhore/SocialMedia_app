@@ -29,10 +29,12 @@ public class PostController {
 
         System.out.println(post);
 
-        Post newPost= postService.createPost(post);
+        Post newPost= postService.createPost(post,username);
 
         PostDto newPostDto=new PostDto();
+        newPostDto.setPostId(newPost.getId());
         newPostDto.setContent(newPost.getContent());
+        newPostDto.setCatagory(newPost.getCategory());
         newPostDto.setUser(newPost.getUser());
         newPostDto.setImageUrl(newPost.getImageUrl());
         System.out.println(newPostDto+"\n"+newPostDto);
@@ -57,4 +59,5 @@ public class PostController {
                 .map(post -> new ResponseEntity<>(post, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
 }

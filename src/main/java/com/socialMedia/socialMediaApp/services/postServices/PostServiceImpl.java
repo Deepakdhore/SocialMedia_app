@@ -27,12 +27,13 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostNotification postNotification;
     @Override
-    public Post createPost(Map<String,String> post) {
+    public Post createPost(Map<String,String> post,String username) {
 
         Post newPost= new Post();
         newPost.setContent(post.get("description"));
         newPost.setImageUrl(post.get("uploadedUrl"));
-        newPost.setUser(userRepository.findByUsername(post.get("username")).orElse(null));
+        newPost.setCategory(post.get("catagory"));
+        newPost.setUser(userRepository.findByUsername(username).orElse(null));
         newPost.setCreatedAt(LocalDateTime.now());
         System.out.println("this is the new post data"+newPost);
 
@@ -47,8 +48,10 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findByUserUsernameOrderByCreatedAtDesc(username);
         return posts.stream().map(post -> {
             PostDto dto = new PostDto();
+            dto.setPostId(post.getId());
             dto.setContent(post.getContent());
             dto.setImageUrl(post.getImageUrl());
+            dto.setCatagory(post.getCategory());
             return dto;
         }).collect(Collectors.toList());
     }

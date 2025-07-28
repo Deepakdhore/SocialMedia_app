@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface PostService {
-    Post createPost(Map<String,String> post);
+    Post createPost(Map<String,String> post,String username);
     List<PostDto> getPostsByUsername(String username);
     Optional<Post> getPostById(Long id);
 

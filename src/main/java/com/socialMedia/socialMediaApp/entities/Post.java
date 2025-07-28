@@ -1,5 +1,6 @@
 package com.socialMedia.socialMediaApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,8 @@ public class Post {
     private String content;
 
     private String imageUrl;
+
+    private String category;
 
     private LocalDateTime createdAt;
 

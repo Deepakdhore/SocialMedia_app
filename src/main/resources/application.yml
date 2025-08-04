@@ -1,5 +1,11 @@
 spring:
+  application:
+    name: social-media-app
   port: 8080
+  cloud:
+    openfeign:
+      multipart:
+        enabled: true
   datasource:
     url: jdbc:mysql://localhost:3306/social_media_db
     username: root
@@ -12,3 +18,13 @@ spring:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+logging:
+  level:
+    com.socialmedia.socialmediaapp.restclient.MediaClient: DEBUG
+    feign: DEBUG

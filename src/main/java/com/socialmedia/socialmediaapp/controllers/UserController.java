@@ -48,16 +48,18 @@ public class UserController {
     public ResponseEntity<String> addFollower(@PathVariable Long followerUserId,
                                               @PathVariable Long userId){
                 FollowResponse res=userService.addFollower(followerUserId,userId);
+                System.out.println("add follow mehtod invoked \n followerUserid: "+followerUserId+"userId: "+userId);
+        System.out.println("this is the res body: "+res);
 
-                return  new ResponseEntity<>("Succesfully followed the user",HttpStatus.CREATED);
+        return  new ResponseEntity<>("Succesfully followed the user",HttpStatus.CREATED);
     }
     @PutMapping("/folllow/{followerUserId}/{userId}/unfollow")
     public ResponseEntity<String> removeFollower(@PathVariable Long followerUserId,
                                               @PathVariable Long userId){
         FollowResponse res=userService.removeFollower(followerUserId,userId);
-        if(res!=null)
+        if(res==null)
         {
-            return new ResponseEntity<>("Username already following", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Username not following", HttpStatus.CONFLICT);
         }
         return  new ResponseEntity<>("Succesfully unfollowed the user",HttpStatus.CREATED);
     }

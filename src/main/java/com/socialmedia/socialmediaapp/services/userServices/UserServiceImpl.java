@@ -27,7 +27,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public FollowResponse removeFollower(Long followerUserId, Long userId) {
-        return null;
+        FollowResponse fResponse=new FollowResponse();
+        User userWantToFollow= userRepository.findById(followerUserId).orElse(null);
+        User userToBeFollowed= userRepository.findById(userId).orElse(null);
+
+        if(userToBeFollowed.getFollowers().contains(userWantToFollow))
+        {
+            System.out.println("the user follower and and userid "+userWantToFollow.getId()+" => "+userToBeFollowed.getId());
+            userWantToFollow.getFollowing().remove(userToBeFollowed);
+            userToBeFollowed.getFollowers().remove(userWantToFollow);
+            fResponse.setFollowerName(userWantToFollow.getUsername());
+            fResponse.setUserName(userToBeFollowed.getUsername());
+            userRepository.save(userWantToFollow);
+            userRepository.save(userToBeFollowed);
+            return fResponse;
+        }
+        else {
+            return null;
+        }
+
     }
 
     @Override
@@ -41,8 +59,8 @@ public class UserServiceImpl implements UserService {
             System.out.println("the user follower and and userid "+userWantToFollow.getId()+" => "+userToBeFollowed.getId());
             return null;
         }
-        userWantToFollow.getFollowing().remove(userToBeFollowed);
-        userToBeFollowed.getFollowers().remove(userWantToFollow);
+        userWantToFollow.getFollowing().add(userToBeFollowed);
+        userToBeFollowed.getFollowers().add(userWantToFollow);
         fResponse.setFollowerName(userWantToFollow.getUsername());
         fResponse.setUserName(userToBeFollowed.getUsername());
         userRepository.save(userWantToFollow);
